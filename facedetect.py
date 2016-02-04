@@ -10,6 +10,7 @@ import time
 # Import the face detection haar file
 face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
 
+# Used in Screen resolution and positioning later
 widths = 440
 heights = 280
 
@@ -86,38 +87,44 @@ while(True):
             # Add boxes and lines as an overlay
             if (showAr and showVideo and faceFound):
                 for idx,(x,y,w,h) in enumerate(faces):
-                    
+                    # Used in accurate calculations
                     Face_Wcords = float(w)
                     Face_Hcords = float(h)
                     Face_Xcords = int(float(x + (Face_Wcords/2)))
                     Face_Ycords = int(float(y + (Face_Hcords/2)))
                     Screen_width = float(widths)
                     Screen_height = float(heights)
+                    # Magnitude of the text size
                     mag = 0.3
+                    # Z co-ords calculated as area screen
+                    # divided by area of box around face 
                     maxa = Screen_width * Screen_height
                     maxb = Face_Wcords * Face_Hcords
                     Face_Zcords = float(maxa/maxb)
+                    # Prints up values to terminal
                     print "%d %d %r" % (Face_Xcords, Face_Ycords, Face_Zcords)                    
+                    # Drawing fram around face and center point
                     cv2.rectangle(frame,(x,y),(x+w,y+h),(255,0,0),2)
                     cv2.circle(frame, (Face_Xcords, Face_Ycords),2,(0,255,0),2)
+                    # Displaying X, Y, Z and Face Index values
                     cv2.putText(frame,"X-Co-Ords=(%r)" % Face_Xcords, (1,20), cv2.FONT_HERSHEY_SIMPLEX, mag, (0,255,0), 2)
                     cv2.putText(frame,"Y-Co-Ords=(%r)" % Face_Ycords, (widths/3,20), cv2.FONT_HERSHEY_SIMPLEX, mag, (0,255,0), 2)
                     cv2.putText(frame,"Z-Co-Ords=(%r)" % Face_Zcords, (2*widths/3,20), cv2.FONT_HERSHEY_SIMPLEX, mag, (0,255,0), 2)
-                    
                     cv2.putText(frame,"[%r]" % idx, (x , y - 5), cv2.FONT_HERSHEY_SIMPLEX, .3, (255,0,0), 2)
 
-                    
-                    
+                    # Calculating servo positions
                     servox = (int((Face_Xcords / Screen_width) *float(180)) -90)
                     servoy = (int((Face_Ycords / Screen_height) *float(180)) -90)
 
+                    # Displaying servo values
                     cv2.putText(frame,"servoX-Cords=(%r)" % servox, (1,40), cv2.FONT_HERSHEY_SIMPLEX, mag, (0,0,255), 2)
                     cv2.putText(frame,"servoX-Cords=(%r)" % servoy, (widths/3,40), cv2.FONT_HERSHEY_SIMPLEX, mag, (0,0,255), 2)
 
-
+                    # Printing to the terminal
                     print "servo X = %r : servo Y= %r " % (servox, servoy)
                     
-                    
+                    # Displays line from centre of the screen to 
+                    # the centre of the frame around the face
                     if (showLine):
                         cv2.line(frame,(widths/2,heights/2),(x + w/2, y + h/2),(0,0,255),2)
 
