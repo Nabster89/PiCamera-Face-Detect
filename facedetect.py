@@ -1,3 +1,5 @@
+#Code is a conversion of HJordans code found @ https://github.com/HJordan/lampbotics
+
 # import the necessary packages
 from picamera.array import PiRGBArray
 from picamera import PiCamera
